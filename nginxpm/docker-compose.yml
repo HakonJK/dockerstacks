@@ -1,0 +1,36 @@
+# docker-compose.yml for Nginx Proxy Manager
+
+#version: '3.8'
+services:
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: 'nginx-proxy-manager'
+    restart: unless-stopped
+    ports:
+      # These ports are for the public-facing proxy services
+      - '80:80'    # HTTP
+      - '443:443'  # HTTPS
+
+      # This is the port for the Admin Web UI
+      - '8181:81'
+
+      #This is the port for ssh streams
+      - '22:22'
+    volumes:
+      # Persists the Nginx Proxy Manager data and configuration
+      - ./data:/data
+      # Persists the Let's Encrypt SSL certificates
+      - ./letsencrypt:/etc/letsencrypt
+
+    networks:
+      - proxy-net
+
+  custom-404-page:
+    build: ./custom-404  # Tells Docker to build from the folder you created
+    restart: unless-stopped
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true

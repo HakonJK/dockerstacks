@@ -1,0 +1,25 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      # The 8000 port is for the Edge Agent, which you may not need.
+      # The 9443 port is for the Portainer UI itself.
+      - "8000:8000"
+      - "9443:9443"
+    volumes:
+      # This gives Portainer access to the Docker socket.
+      - /var/run/docker.sock:/var/run/docker.sock
+      # This is for Portainer's own persistent data.
+      - portainer_data:/data
+    restart: always
+    networks:
+      - proxy-net
+
+volumes:
+  # This defines the named volume we're using above.
+  portainer_data:
+
+networks: 
+  proxy-net:
+    external: true

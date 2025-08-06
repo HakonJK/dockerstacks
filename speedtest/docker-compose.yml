@@ -1,0 +1,14 @@
+services:
+  openspeedtest:
+    image: openspeedtest/latest
+    container_name: openspeedtest
+    restart: always
+    ports:
+      - "3000:3000" #HTTP
+      - "3001:3001" #WebSockets
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true

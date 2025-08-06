@@ -1,0 +1,26 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    volumes:
+      - ./data:/home/node/.n8n
+    # This line is now active. It maps the container's internal port 5678
+    # to port 5678 on your Debian VM's IP address (192.168.68.86).
+    ports:
+      - '5678:5678'
+    environment:
+      - N8N_HOST=${HOST}
+      - N8N_PROTOCOL=https
+     # - N8N_SECURE_COOKIE=false
+      - WEBHOOK_URL=${WEBHOOK}
+      - TZ=Europe/Oslo
+      - GENERIC_TIMEZONE=Europe/Oslo
+    # The 'networks' section has been removed to use the standard Docker networking.
+
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true

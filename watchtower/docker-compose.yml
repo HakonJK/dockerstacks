@@ -1,0 +1,52 @@
+# docker-compose.yml for Watchtower
+#version: '3.8' # Use a recent Docker Compose file format
+
+services:
+  watchtower:
+    image: containrrr/watchtower:latest # Always pull the latest Watchtower itself
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # Mount the Docker socket for Watchtower to communicate with Docker
+    environment:
+      # Optional: Set a specific check interval (default is 24 hours / 86400 seconds)
+      # Uncomment and adjust if you want it to check more or less frequently.
+      # - WATCHTOWER_POLL_INTERVAL=3600 # Check every hour
+
+      # Optional: Enable cleanup of old images after updating a container. Highly recommended.
+      - WATCHTOWER_CLEANUP=true
+
+      # Optional: Disable restarting containers after an update (e.g., if you want manual restart)
+      # - WATCHTOWER_NO_RESTART=false # Default is false, set to true to disable auto-restart
+
+      # Optional: Monitor only specific containers by name (uncomment and list if needed)
+      # - WATCHTOWER_INCLUDE_STOPPED=true # Include stopped containers for monitoring
+      # - WATCHTOWER_MONITOR_ONLY=container1,container2,container3 # Comma-separated list of container names
+
+      # Optional: Set timezone for logs (useful if you're in a specific timezone)
+      - TZ=Europe/Oslo # Example: Adjust to your specific timezone (e.g., Europe/Berlin, America/New_York)
+
+      # --- EMAIL NOTIFICATION SETTINGS (for Gmail) ---
+      - WATCHTOWER_NOTIFICATIONS=email
+      - WATCHTOWER_NOTIFICATION_EMAIL_FROM=${MAIL_FROM} # Your Gmail address
+      - WATCHTOWER_NOTIFICATION_EMAIL_TO=${MAIL_TO} # Where you want to receive notifications
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=smtp.gmail.com
+      - WATCHTOWER_NOTIFICATION_EMAIL_PORT=587 # Standard port for TLS/STARTTLS
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=${MAIL_FROM} # Your Gmail address (username)
+      - WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=${GMAIL_SERVER_PW} #<<< Replace with your App Password!
+
+      # Optional: Notification settings (example for Email, consult Watchtower docs for more options like Slack, Gotify etc.)
+      # - WATCHTOWER_NOTIFICATIONS=email
+      # - WATCHTOWER_NOTIFICATION_EMAIL_FROM=watchtower@example.com
+      # - WATCHTOWER_NOTIFICATION_EMAIL_TO=your_email@example.com
+      # - WATCHTOWER_NOTIFICATION_EMAIL_SERVER=smtp.example.com
+      # - WATCHTOWER_NOTIFICATION_EMAIL_PORT=587 # Or 465 for SSL
+      # - WATCHTOWER_NOTIFICATION_EMAIL_USER=smtp_user
+      # - WATCHTOWER_NOTIFICATION_EMAIL_PASS=smtp_password
+      # - WATCHTOWER_NOTIFICATION_EMAIL_ACCEPT_INVALID_CHARS=true # Optional, if your email has special characters
+      # - WATCHTOWER_NOTIFICATION_EMAIL_ACCEPT_INSECURE=true # Optional, if using self-signed certs
+
+    restart: unless-stopped # Automatically restart Watchtower if it stops for any reason
+    # If you want to exclude Watchtower itself from being monitored and updated by itself,
+    # you can add the following label:
+    labels:
+      - com.centurylinklabs.watchtower.enable=false # Exclude Watchtower from being monitored by Watchtower
