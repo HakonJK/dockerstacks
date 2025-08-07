@@ -1,5 +1,6 @@
 # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
+#DUCKDNS  
   duckdns:
     image: lscr.io/linuxserver/duckdns:latest
     container_name: duckdns
@@ -16,6 +17,7 @@ services:
       - ./duckdns:/config #optional
     restart: unless-stopped
 
+#PIHOLE SINKHOLE
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -39,7 +41,7 @@ services:
 
       # For persisting Pi-hole's databases and common configuration file
     volumes:
-      - '${ETC_PIHOLE}:/etc/pihole'
+      - '/home/docker/network-services/pihole/etc-pihole:/etc/pihole'
 
     cap_add:
       # See https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
@@ -49,6 +51,52 @@ services:
 
     networks:
       - proxy-net
+      
+#CLOUDFLARE DDNS SERVICE
+  cloudflare-ddns-vpn:
+    image: oznu/cloudflare-ddns:latest
+    restart: always
+    environment:
+      - API_KEY=${CF_API}
+      - ZONE=${CF_DOMAIN}
+      - SUBDOMAIN=${CF_SUB}
+      - PROXIED=false
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+#CLOUDFLARE TUNNEL
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel-${CF_DOMAIN}
+    restart: unless-stopped
+    network_mode: host
+    
+    # These are the capabilities you configured in the GUI
+    cap_add:
+      - AUDIT_WRITE
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - FSETID
+      - KILL
+      - MKNOD
+      - NET_BIND_SERVICE
+      - NET_RAW
+      - SETPCAP
+      - SETGID
+      - SETUID
+      - SYS_CHROOT
+
+    # This is the execution command split into entrypoint and command
+    # IMPORTANT: Replace the placeholder below with your actual, full token
+    entrypoint: cloudflared --no-autoupdate
+    command: tunnel run --token ${TUNNEL_TOKEN}
+
+    # Environment variables from your setup
+    environment:
+      - PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+      - SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 networks:
   proxy-net:
