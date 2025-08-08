@@ -41,7 +41,7 @@ services:
 
       # For persisting Pi-hole's databases and common configuration file
     volumes:
-      - '/home/docker/network-services/pihole/etc-pihole:/etc/pihole'
+      - '${ETC_PIHOLE}:/etc/pihole'
 
     cap_add:
       # See https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
