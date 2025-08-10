@@ -4,7 +4,7 @@ services:
     container_name: n8n
     restart: unless-stopped
     volumes:
-      - ${DATA_PATH}:/home/node/.n8n #DATA_PATH refers to your local data path
+      - ${DATA_PATH}:/home/node/.n8n
     # This line is now active. It maps the container's internal port 5678
     # to port 5678 on your Debian VM's IP address (192.168.68.86).
     ports:
@@ -16,6 +16,9 @@ services:
       - WEBHOOK_URL=${WEBHOOK}
       - TZ=Europe/Oslo
       - GENERIC_TIMEZONE=Europe/Oslo
+      - N8N_RUNNERS_ENABLED=true #Futureproofing for soon-to-be-deprecated feature
+      - N8N_TRUST_PROXY=true #if behind a proxy service - allows n8n to trust the proxy
+      - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true #Tries to set correct permissions
     # The 'networks' section has been removed to use the standard Docker networking.
 
     networks:
