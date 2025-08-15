@@ -1,0 +1,82 @@
+services:
+  openwebui:
+    image: ghcr.io/open-webui/open-webui:latest
+    container_name: openwebui
+    depends_on:
+      - postgres
+      - qdrant
+      - litellm
+    environment:
+      - TZ=${TZ}
+      - WEBUI_SECRET_KEY=${OWUI_SECRET}
+      - DATABASE_URL=${OWUI_DB_URL}
+      - ENABLE_RAG_EMBEDDING=true
+      - RAG_VECTOR_DB=qdrant
+      - QDRANT_URL=http://qdrant:6333
+      - OPENAI_API_BASE_URL=http://litellm:4000
+      - OPENAI_API_KEY=${LITELLM_CLIENT_KEY}
+      - DEFAULT_MODEL=gpt-5
+      - FILE_MAX_SIZE_MB=200
+    volumes:
+      - ${PATH}/openwebui/data:/app/backend/data
+    ports:
+      - "${LAN_IP}:${OWUI_PORT}:8080"
+    networks:
+      - proxy-net
+      - chatstack
+    restart: unless-stopped
+
+
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    container_name: litellm
+    environment:
+      - TZ=${TZ}
+      - LITELLM_LOG=${LITELLM_LOG}
+      - LITELLM_MASTER_KEY=${LITELLM_MASTER_KEY}
+      - LITELLM_SALT_KEY=${LITELLM_SALT_KEY}
+      - DATABASE_URL=${LITELLM_DB_URL}
+      - STORE_MODEL_IN_DB=True
+      - LITELLM_PORT=${LITELLM_PORT}
+    command: ["--config", "/config/config.yaml", "--host", "0.0.0.0", "--port", "${LITELLM_PORT}"]
+    volumes:
+      - ${PATH}/litellm:/config
+    ports:
+      - "127.0.0.1:${LITELLM_PORT}:${LITELLM_PORT}"  # bind to localhost on host for safety
+    networks:
+      - chatstack
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      - TZ=${TZ}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ${PATH}/postgres/data:/var/lib/postgresql/data
+    networks:
+      - chatstack
+    restart: unless-stopped
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: qdrant
+    environment:
+      - TZ=${TZ}
+    volumes:
+      - ${PATH}/qdrant/storage:/qdrant/storage
+    ports:
+      - "${LAN_IP}:${QDRANT_PORT}:6333"
+    networks:
+      - chatstack
+    restart: unless-stopped
+
+networks:
+  chatstack:
+    name: chatstack
+  proxy-net:
+    external:
+      name: proxy-net
