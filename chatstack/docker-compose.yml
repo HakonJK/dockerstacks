@@ -69,7 +69,7 @@ services:
     volumes:
       - ${PATH}/qdrant/storage:/qdrant/storage
     ports:
-      - "${LAN_IP}:${QDRANT_PORT}:6333"
+      - "127.0.0.1:${QDRANT_PORT}:6333"
     networks:
       - chatstack
     restart: unless-stopped
