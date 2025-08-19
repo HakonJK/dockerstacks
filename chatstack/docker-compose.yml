@@ -68,8 +68,8 @@ services:
       - TZ=${TZ}
     volumes:
       - ${PATH}/qdrant/storage:/qdrant/storage
-    ports:
-      - "127.0.0.1:${QDRANT_PORT}:6333"
+#    ports: ---UNCOMMENT IF YOU NEED LOCAL EXPOSURE OF QDRANT DB
+#      - "127.0.0.1:${QDRANT_PORT}:6333"
     networks:
       - chatstack
     restart: unless-stopped
