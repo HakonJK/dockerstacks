@@ -42,6 +42,7 @@ services:
       # For persisting Pi-hole's databases and common configuration file
     volumes:
       - '${ETC_PIHOLE}:/etc/pihole'
+      - '${ETC_DNSMASQ}:/etc/dnsmasq.d'
 
     cap_add:
       # See https://github.com/pi-hole/docker-pi-hole#note-on-capabilities
@@ -53,14 +54,33 @@ services:
       - proxy-net
       
 #CLOUDFLARE DDNS SERVICE
-  cloudflare-ddns-vpn:
-    image: oznu/cloudflare-ddns:latest
-    restart: always
+
+  cloudflare-ddns-home:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns-vpn
+    restart: unless-stopped
     environment:
-      - API_KEY=${CF_API}
-      - ZONE=${CF_DOMAIN}
-      - SUBDOMAIN=${CF_SUB}
+      - CLOUDFLARE_API_TOKEN=${CF_API}
+      - DOMAINS=${CF_SUB_VPN}
       - PROXIED=false
+      - IP6=off
+      - IP6_PROVIDER=none
+      - CF_MAIN=${CF_MAIN}
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+  cloudflare-ddns-vpn:
+    image: favonia/cloudflare-ddns:latest
+    container_name: cloudflare-ddns-home
+    restart: unless-stopped
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CF_API}
+      - DOMAINS=${CF_SUB_HOME} #Subdomain in full
+      - PROXIED=true
+      - IP6=off
+      - IP6_PROVIDER=none
+      - CF_MAIN=${CF_MAIN}
     dns:
       - 1.1.1.1
       - 8.8.8.8
@@ -68,7 +88,7 @@ services:
 #CLOUDFLARE TUNNEL
   cloudflared:
     image: cloudflare/cloudflared:latest
-    container_name: cloudflare-tunnel-${CF_DOMAIN}
+    container_name: cloudflare-tunnel-${CF_MAIN}
     restart: unless-stopped
     network_mode: host
     
