@@ -20,7 +20,7 @@ litellm_settings:
   telemetry: false
   drop_params: true
   general_settings:
-    master_key: "0aa7d7f13884983301dec598de1f581b"
+    master_key: "somesupermasterkey"
 
 router_settings:
   num_retries: 2
