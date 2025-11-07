@@ -1,6 +1,7 @@
 services:
   openwebui:
-    image: ghcr.io/open-webui/open-webui:latest
+    image: ghcr.io/open-webui/open-webui:git-e0d5de1
+
     container_name: openwebui
     depends_on:
       - postgres
@@ -17,14 +18,28 @@ services:
       - OPENAI_API_KEY=${LITELLM_CLIENT_KEY}
       - DEFAULT_MODEL=gpt-5
       - FILE_MAX_SIZE_MB=200
+      #Authentik
+      - OAUTH_CLIENT_ID=${OWUI_OAUTH_CLIENT_ID}
+      - OAUTH_CLIENT_SECRET=${OWUI_OAUTH_CLIENT_SECRET}
+      - OAUTH_PROVIDER_NAME=Authentik
+      - OAUTH_SCOPES=openid email profile
+      - OPENID_PROVIDER_URL=${OPENID_PROVIDER_URL}
+      - OPENID_REDIRECT_URI=${OPENID_REDIRECT_URI}
+      - WEBUI_URL=${WEBUI_URL}
+      - ENABLE_OAUTH_SIGNUP=true
+      - ENABLE_LOGIN_FORM=false #Allows username/pw login - must be disabled with enable_oauth_signup=true
+      - OAUTH_MERGE_ACCOUNTS_BY_EMAIL=true
+      
     volumes:
-      - ${PATH}/openwebui/data:/app/backend/data
+      - ${CHATSTACK_PATH}/openwebui/data:/app/backend/data
     ports:
       - "${LAN_IP}:${OWUI_PORT}:8080"
+
     networks:
       - proxy-net
       - chatstack
     restart: unless-stopped
+
 
 
   litellm:
@@ -38,13 +53,16 @@ services:
       - DATABASE_URL=${LITELLM_DB_URL}
       - STORE_MODEL_IN_DB=True
       - LITELLM_PORT=${LITELLM_PORT}
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+
     command: ["--config", "/config/config.yaml", "--host", "0.0.0.0", "--port", "${LITELLM_PORT}"]
     volumes:
-      - ${PATH}/litellm:/config
+      - ${CHATSTACK_PATH}/litellm:/config
     ports:
-      - "127.0.0.1:${LITELLM_PORT}:${LITELLM_PORT}"  # bind to localhost on host for safety
+      - "127.0.0.1:${LITELLM_PORT}:${LITELLM_PORT}"  # bind to localhost for safety
     networks:
       - chatstack
+      - proxy-net
     restart: unless-stopped
 
   postgres:
@@ -53,10 +71,11 @@ services:
     environment:
       - TZ=${TZ}
       - POSTGRES_DB=${POSTGRES_DB}
+
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ${PATH}/postgres/data:/var/lib/postgresql/data
+      - ${CHATSTACK_PATH}/postgres/data:/var/lib/postgresql/data
     networks:
       - chatstack
     restart: unless-stopped
@@ -67,8 +86,8 @@ services:
     environment:
       - TZ=${TZ}
     volumes:
-      - ${PATH}/qdrant/storage:/qdrant/storage
-#    ports: ---UNCOMMENT IF YOU NEED LOCAL EXPOSURE OF QDRANT DB
+      - ${CHATSTACK_PATH}/qdrant/storage:/qdrant/storage
+#    ports:
 #      - "127.0.0.1:${QDRANT_PORT}:6333"
     networks:
       - chatstack
