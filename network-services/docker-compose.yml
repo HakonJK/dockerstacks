@@ -55,20 +55,7 @@ services:
       
 #CLOUDFLARE DDNS SERVICE
 
-  cloudflare-ddns-home:
-    image: favonia/cloudflare-ddns:latest
-    container_name: cloudflare-ddns-vpn
-    restart: unless-stopped
-    environment:
-      - CLOUDFLARE_API_TOKEN=${CF_API}
-      - DOMAINS=${CF_SUB_VPN}
-      - PROXIED=false
-      - IP6=off
-      - IP6_PROVIDER=none
-      - CF_MAIN=${CF_MAIN}
-    dns:
-      - 1.1.1.1
-      - 8.8.8.8
+
 
   cloudflare-ddns-vpn:
     image: favonia/cloudflare-ddns:latest
