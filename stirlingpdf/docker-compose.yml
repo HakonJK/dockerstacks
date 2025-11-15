@@ -15,3 +15,10 @@ services:
       - LANGS=en_GB
       - SYSTEM_ENABLEANALYTICS=false
       - DISABLE_PIXEL=true
+
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true
