@@ -1,6 +1,8 @@
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
+    devices:
+      - dev/dri:dev/dri
     container_name: qbittorrent
     environment:
       - PUID=1026
