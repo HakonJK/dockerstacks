@@ -1,8 +1,6 @@
 services:
   qbittorrent:
     image: lscr.io/linuxserver/qbittorrent:latest
-    devices:
-      - dev/dri:dev/dri
     container_name: qbittorrent
     environment:
       - PUID=1026
@@ -24,6 +22,8 @@ services:
 
   jellyfin:
     image: lscr.io/linuxserver/jellyfin:latest
+    devices:
+      - dev/dri:dev/dri    
     container_name: jellyfin
     environment:
       - PUID=1026
