@@ -1,6 +1,6 @@
 services:
   openwebui:
-    image: ghcr.io/open-webui/open-webui:git-140605e
+    image: ghcr.io/open-webui/open-webui:git-6f1486f
 
     container_name: openwebui
     depends_on:
