@@ -5,3 +5,7 @@ services:
     ports:
       - '3363:8080'
     restart: unless-stopped
+networks:
+  proxy-net:
+    external:
+      name: proxy-net
