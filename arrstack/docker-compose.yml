@@ -48,9 +48,9 @@ services:
       - ${QBT_CONFIG}:/config
       - ${QBT_DL}:/downloads #optional
     ports:
-      - 8080:8080
-      - 6881:6881
-      - 6881:6881/udp
+     # - 8080:8080
+     # - 6881:6881
+     # - 6881:6881/udp
     restart: unless-stopped
     
     network_mode: service:gluetun #only change to QBT
