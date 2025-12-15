@@ -47,7 +47,7 @@ services:
     volumes:
       - ${QBT_CONFIG}:/config
       - ${QBT_DL}:/downloads #optional
-    ports:
+   # ports:
      # - 8080:8080
      # - 6881:6881
      # - 6881:6881/udp
