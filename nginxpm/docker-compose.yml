@@ -12,8 +12,8 @@ services:
       # This is the port for the Admin Web UI
       - '8181:81'
 
-      #This is the port for ssh streams
-      - '22:22'
+      #Ports for ssh streams
+      #- '22:22'
     volumes:
       # Persists the Nginx Proxy Manager data and configuration
       - ${NGINX_PATH}/data:/data
