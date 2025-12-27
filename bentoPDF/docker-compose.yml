@@ -4,7 +4,9 @@ services:
     container_name: bentopdf
     ports:
       - '3363:8080'
-    restart: unless-stopped
+    restart: unless-stopped 
+    networks:
+      - proxy-net
 networks:
   proxy-net:
     external:
