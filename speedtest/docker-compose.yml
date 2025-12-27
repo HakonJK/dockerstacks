@@ -4,7 +4,7 @@ services:
     container_name: openspeedtest
     restart: always
     ports:
-      - #"127.0.0.1:3000:3000" #HTTP
+      #- "127.0.0.1:3000:3000" #HTTP
       - "127.0.0.1:3001:3001" #WebSockets
     networks:
       - proxy-net
