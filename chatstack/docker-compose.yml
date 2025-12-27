@@ -33,7 +33,7 @@ services:
     volumes:
       - ${CHATSTACK_PATH}/openwebui/data:/app/backend/data
     ports:
-      - "${LAN_IP}:${OWUI_PORT}:8080"
+      - "127.0.0.1:${OWUI_PORT}:8080"
 
     networks:
       - proxy-net
