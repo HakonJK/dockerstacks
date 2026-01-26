@@ -55,7 +55,7 @@ services:
       - LITELLM_PORT=${LITELLM_PORT}
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
 
-    command: ["--config", "/config/config.yaml", "--host", "0.0.0.0", "--port", "${LITELLM_PORT}"]
+    command: ["--config", "/config/config.yaml", "--host", "0.0.0.0", "--port", "${LITELLM_PORT}", "--num_workers", "4"]
     volumes:
       - ${CHATSTACK_PATH}/litellm:/config
     ports:
