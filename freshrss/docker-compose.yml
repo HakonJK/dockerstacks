@@ -15,7 +15,7 @@ services:
       - OIDC_X_FORWARDED_HEADERS="X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto"
       - OIDC_SCOPES="openid email profile"
       - OIDC_REMOTE_USER_CLAIM= preferred_username
-      - TRUSTED_PROXY: "172.25.0.0/24"
+      - TRUSTED_PROXY: 172.25.0.0/24
     volumes:
       - ${config}:/config
     #ports:
