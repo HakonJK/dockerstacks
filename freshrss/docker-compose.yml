@@ -8,7 +8,7 @@ services:
       - PGID=1000
       - TZ=Etc/UTC
     volumes:
-      - /path/to/freshrss/config:/config
+      - ${config}:/config
     ports:
      # - 80:80 not needed -> only proxy access
     restart: unless-stopped
