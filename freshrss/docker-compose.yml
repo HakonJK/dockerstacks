@@ -9,7 +9,7 @@ services:
       - TZ=Etc/UTC
     volumes:
       - ${config}:/config
-    ports:
+    #ports:
      # - 80:80 not needed -> only proxy access
     restart: unless-stopped
 
