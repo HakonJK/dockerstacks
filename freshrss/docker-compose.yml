@@ -10,6 +10,12 @@ services:
     volumes:
       - /path/to/freshrss/config:/config
     ports:
-      - 8055:80
+     # - 80:80 not needed -> only proxy access
     restart: unless-stopped
-    
+
+    networks:
+      - proxy-net
+networks:
+  proxy-net:
+    external:
+      name: proxy-net
