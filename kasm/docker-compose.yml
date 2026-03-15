@@ -1,6 +1,6 @@
 services:
   kasm:
-    image: lscr.io/linuxserver/kasm:-5d8820f
+    image: lscr.io/linuxserver/kasm:git-5d8820f
     container_name: kasm
     privileged: true
     security_opt:
