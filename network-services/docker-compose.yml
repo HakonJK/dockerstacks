@@ -1,22 +1,5 @@
 # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
 services:
-#DUCKDNS  
-  duckdns:
-    image: lscr.io/linuxserver/duckdns:latest
-    container_name: duckdns
-    network_mode: host #optional
-    environment:
-      - PUID=1026 #optional
-      - PGID=1026 #optional
-      - TZ=Europe/Oslo #optional
-      - SUBDOMAINS=${DOMAINS} #Subdomains of duckdns.org to update
-      - TOKEN=${SECRET_TOKEN} #Token from DuckDNS site
-      - UPDATE_IP=ipv4 #optional
-      - LOG_FILE=false #optional
-    volumes:
-      - ./duckdns:/config #optional
-    restart: unless-stopped
-
 #PIHOLE SINKHOLE
   pihole:
     container_name: pihole
