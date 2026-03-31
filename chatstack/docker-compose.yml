@@ -59,7 +59,7 @@ services:
     volumes:
       - ${CHATSTACK_PATH}/litellm:/config
     ports:
-      - "127.0.0.1:${LITELLM_PORT}:${LITELLM_PORT}"  # bind to localhost for safety
+      - "${LITELLM_PORT}:${LITELLM_PORT}"
     networks:
       - chatstack
       - proxy-net
