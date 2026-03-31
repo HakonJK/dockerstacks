@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <title>Aspelia</title>
+  <desc>Transparent shield mark for Aspelia</desc>
+
+  <path
+    d="M128 22
+       C99 22 75 29 56 39
+       V110
+       C56 162 87 201 128 226
+       C169 201 200 162 200 110
+       V39
+       C181 29 157 22 128 22Z"
+    fill="#0F172A"/>
+
+  <path
+    d="M128 22
+       C99 22 75 29 56 39
+       V110
+       C56 162 87 201 128 226
+       C169 201 200 162 200 110
+       V39
+       C181 29 157 22 128 22Z"
+    stroke="#E7ECF3"
+    stroke-opacity="0.95"
+    stroke-width="6"
+    stroke-linejoin="round"/>
+
+  <path
+    d="M128 47
+       L84 161
+       H103
+       L114 133
+       H142
+       L153 161
+       H172
+       L128 47Z"
+    fill="#F8FAFC"/>
+
+  <path
+    d="M118 116
+       H138"
+    stroke="#0B1020"
+    stroke-width="6"
+    stroke-linecap="round"/>
+</svg>
