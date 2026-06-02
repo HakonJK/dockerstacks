@@ -43,7 +43,7 @@ services:
 
 
   litellm:
-    image: ghcr.io/berriai/litellm:main-v1.87.0-stable
+    image: ghcr.io/berriai/litellm:main-v1.87.0
     container_name: litellm
     environment:
       - TZ=${TZ}
